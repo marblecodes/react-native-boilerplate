@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation';
-import { Provider } from 'react-redux';
+import ApolloClient from "apollo-boost";
 import configureStore from './state/store';
 import { registerScreens } from './screens';
 
@@ -7,8 +7,13 @@ export const startApp = () => {
   // Initiate the redux store
   const store = configureStore();
 
+  // Initiate the Apolli client
+  const client = new ApolloClient({
+    uri: 'https://graphql-pokemon.now.sh'
+  });
+
   // Register the screens
-  registerScreens(store, Provider);
+  registerScreens(store, client);
 
   // Listen to the App launch event
   Navigation.events().registerAppLaunchedListener(() => {

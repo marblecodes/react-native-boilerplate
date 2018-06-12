@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
+import { ThemeProvider } from 'styled-components';
+import theme from '../config/theme';
 
-export function registerContainerWithRedux(containerName, comp, store, Provider) {
+export function registerContainerWithProviders(containerName, comp, store, client) {
   const generatorWrapper = function() {
     const InternalComponent = comp;
 
@@ -14,10 +17,14 @@ export function registerContainerWithRedux(containerName, comp, store, Provider)
       render() {
         return (
           <Provider store={store}>
-            <InternalComponent
-              ref="child"
-              {...this.props}
-            />
+            <ApolloProvider client={client}>
+              <ThemeProvider theme={theme}>
+                <InternalComponent
+                  ref="child"
+                  {...this.props}
+                />
+              </ThemeProvider>
+            </ApolloProvider>
           </Provider>
         );
       }
@@ -57,4 +64,4 @@ export function registerContainerWithRedux(containerName, comp, store, Provider)
   Navigation.registerComponent(containerName, generatorWrapper);
 }
 
-export default registerContainerWithRedux;
+export default registerContainerWithProviders;

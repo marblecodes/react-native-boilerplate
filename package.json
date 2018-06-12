@@ -7,7 +7,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "apollo-boost": "^0.1.7",
+    "apollo-client": "^2.3.2",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2",
     "react": "16.3.1",
+    "react-apollo": "^2.1.4",
     "react-native": "0.54.4",
     "react-native-navigation": "^2.0.2344",
     "react-native-svg": "^6.3.1",

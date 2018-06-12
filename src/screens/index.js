@@ -1,8 +1,9 @@
 import React from 'react';
 import { Navigation } from 'react-native-navigation';
-import registerContainerWithRedux from '../lib/registerContainerWithRedux';
+import registerContainerWithProviders from '../lib/registerContainerWithProviders';
 
 import MainScreen from '../components/screens/MainScreen';
+import DetailScreen from '../components/screens/DetailScreen';
 
 /**
  * HOC to wrap a provided screen in a redux provider
@@ -24,6 +25,7 @@ function sceneCreator (sceneComp, store) {
  * @param {Object}    store    A redux store instance
  * @param {Component} Provider A redux provider HOC
  */
-export const registerScreens = (store, Provider) => {
-  registerContainerWithRedux('MainScreen', MainScreen, store, Provider);
+export const registerScreens = (store, client) => {
+  registerContainerWithProviders('MainScreen', MainScreen, store, client);
+  registerContainerWithProviders('DetailScreen', DetailScreen, store, client);
 }
