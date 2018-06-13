@@ -52,10 +52,23 @@ const PokemonNumber = styled.Text`
 `;
 
 class MainScreen extends Component {
-  // static get options() {}
+  static get options() {
+    return {
+      topBar: {
+        visible: false,
+      }
+    };
+  }
+
+  constructor(props) {
+    super(props);
+    this.onPokemonPress = this.onPokemonPress.bind(this);
+  }
 
   onPokemonPress() {
-    Navigation.push('DetailScreen');
+    Navigation.push(this.props.componentId, {
+      component: { name: 'DetailScreen' }
+    });
   }
 
   render() {
