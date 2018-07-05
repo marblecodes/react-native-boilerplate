@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, FlatList, Text } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { FlatList, Text } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -19,36 +19,40 @@ const pokemonQuery = gql`
   }
 `;
 
-
-const Wrapper = styled.View`
-  flex: 1;
+const Header = styled.View`
+  align-items: center;
+  padding-top: ${2 * metrics.statusbarHeight}px;
+  padding-bottom: ${metrics.statusbarHeight}px;
+  background-color: ${props => props.theme.colors.pokemonRed};
 `;
+
+const HeaderTitle = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+`
 
 const PokemonBlock = styled.TouchableOpacity`
   align-items: center;
   flex-basis: ${100 / POKEMON_PER_ROW}%;
-  border-style: solid;
-  border-color: #eaeaea;
-  border-top-width: ${props => (props.isFirstRow ? 0 : 1)}px;
-  border-left-width: ${props => (props.isCenterBlock ? 1 : 0)}px;
-  border-right-width: ${props => (props.isCenterBlock ? 1 : 0)}px;
 `;
 
 const PokemonThumb = styled.Image`
   width: 50px;
   height: 50px;
   margin-top: ${BLOCK_PADDING}px;
-  margin-bottom: ${BLOCK_PADDING}px;
+  margin-bottom: ${BLOCK_PADDING/2}px;
 `;
 
 const PokemonTitle = styled.Text`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
+  color: ${props => props.theme.colors.darkgray};
 `;
 
 const PokemonNumber = styled.Text`
-  font-size: 14px;
-  color: #cccccc;
+  font-size: 12px;
+  color: ${props => props.theme.colors.gray};
 `;
 
 class MainScreen extends Component {
@@ -65,9 +69,14 @@ class MainScreen extends Component {
     this.onPokemonPress = this.onPokemonPress.bind(this);
   }
 
-  onPokemonPress() {
+  onPokemonPress(pokemon) {
     Navigation.push(this.props.componentId, {
-      component: { name: 'DetailScreen' }
+      component: {
+        name: 'DetailScreen',
+        passProps: {
+          pokemon
+        }
+      }
     });
   }
 
@@ -79,19 +88,24 @@ class MainScreen extends Component {
           if (error) return `Error! ${error.message}`;
 
           return (
-            <Wrapper>
+            <Fragment>
+              <Header>
+                <HeaderTitle>Dex</HeaderTitle>
+              </Header>
               <FlatList
                 data={data.pokemons}
                 keyExtractor={(item, index) => `pokemon-${item.number}`}
                 renderItem={({item}) => (
-                  <PokemonBlock onPress={this.onPokemonPress}>
+                  <PokemonBlock onPress={() => this.onPokemonPress(item)}>
                     <PokemonThumb source={{uri: item.image}} />
-                    <Text>{item.name}</Text>
+                    <PokemonTitle>{item.name}</PokemonTitle>
+                    <PokemonNumber>{item.number}</PokemonNumber>
                   </PokemonBlock>
                 )}
                 numColumns={POKEMON_PER_ROW}
+                ItemSeparatorComponent={() => (null)}
               />
-            </Wrapper>
+            </Fragment>
           )
         }}
       </Query>
